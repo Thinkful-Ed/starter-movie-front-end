@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import DetailedMovie from "./DetailedMovie";
 const { REACT_APP_API_URL: API_URL } = process.env;
 
 function DetailedMoviesList() {
@@ -6,7 +7,7 @@ function DetailedMoviesList() {
 
   useEffect(() => {
     async function loadMovies() {
-      const url = `${API_URL}/movies`;
+      const url = `${API_URL}/movies?included=reviews`;
       const response = await fetch(url);
       return response.json();
     }
@@ -15,28 +16,8 @@ function DetailedMoviesList() {
   }, []);
 
   const list = movies.map((movie) => (
-    <section className="row mt-4" key={movie.movie_id}>
-      <article className="col-sm-12 col-md-6 col-lg-3">
-        <img
-          alt={`${movie.title} Poster`}
-          className="rounded"
-          src={movie.image_url}
-          style={{ width: "100%" }}
-        />
-      </article>
-      <aside className="col-sm-12 col-md-6 col-lg-9">
-        <h3 className="font-poppins-heading mb-4">{movie.title}</h3>
-        <p>{movie.description}</p>
-        <p>
-          <strong>Runtime:</strong> {movie.runtime} minutes
-        </p>
-        <p>
-          <strong>Rating:</strong> {movie.rating}
-        </p>
-      </aside>
-    </section>
+    <DetailedMovie key={movie.movie_id} movie={movie} />
   ));
-
   return (
     <main className="container">
       <h2 className="font-poppins">All Movies</h2>

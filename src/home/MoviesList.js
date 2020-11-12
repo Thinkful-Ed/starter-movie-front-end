@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 const { REACT_APP_API_URL: API_URL } = process.env;
 
 function MoviesList() {
@@ -22,7 +23,12 @@ function MoviesList() {
         src={movie.image_url}
         style={{ width: "100%" }}
       />
-      <h3 className="font-poppins-heading text-center mt-2">{movie.title}</h3>
+      <Link
+        to={`/movies/${movie.movie_id}`}
+        className="stretched-link text-dark"
+      >
+        <h3 className="font-poppins-heading text-center mt-2">{movie.title}</h3>
+      </Link>
     </article>
   ));
 
