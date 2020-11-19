@@ -2,9 +2,8 @@ import React from "react";
 import Theater from "./Theater";
 
 function TheaterList({ theaters }) {
-  console.log("theaters", theaters);
   return (
-    <section>
+    <section className="mt-4">
       <h4>Now Showing Here</h4>
       <div className="row">
         {theaters.map((theater) => (

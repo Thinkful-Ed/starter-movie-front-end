@@ -6,21 +6,40 @@ import TheaterList from "./TheaterList";
 
 const { REACT_APP_API_URL: API_URL } = process.env;
 
+async function loadMovie(movieId) {
+  const url = `${API_URL}/movies/${movieId}?included=theaters&included=reviews&included=critics`;
+  const response = await fetch(url);
+  return response.json();
+}
+
 function FullMovie() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState({});
 
   useEffect(() => {
-    async function loadMovie() {
-      const url = `${API_URL}/movies/${movieId}?included=reviews`;
-      const response = await fetch(url);
-      return response.json();
-    }
+    loadMovie(movieId).then(({ data }) => setMovie(data));
+  }, [movieId]);
 
-    loadMovie().then(({ data }) => setMovie(data));
-  }, []);
+  const updateReviewScore = async (
+    { movie_id: movieId, review_id: reviewId },
+    newScore
+  ) => {
+    const url = `${API_URL}/reviews/${reviewId}`;
+    const body = JSON.stringify({ score: newScore });
+    await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
+    return loadMovie(movieId).then(({ data }) => setMovie(data));
+  };
 
-  console.log(movie);
+  const deleteReview = async ({ movie_id: movieId, review_id: reviewId }) => {
+    const url = `${API_URL}/reviews/${reviewId}`;
+    await fetch(url, { method: "DELETE" });
+    return loadMovie(movieId).then(({ data }) => setMovie(data));
+  };
+
   return (
     <div className="container">
       <section className="row mt-4">
@@ -37,9 +56,12 @@ function FullMovie() {
           {movie.theaters && movie.theaters.length ? (
             <TheaterList theaters={movie.theaters} />
           ) : null}
-          <hr />
           {movie.reviews && movie.reviews.length ? (
-            <ReviewList reviews={movie.reviews} />
+            <ReviewList
+              reviews={movie.reviews}
+              deleteReview={deleteReview}
+              updateReviewScore={updateReviewScore}
+            />
           ) : null}
         </aside>
       </section>

@@ -28,9 +28,12 @@ function HeaderNav() {
         </Link>
       </li>
       <li className="nav-item">
-        <a className="nav-link mx-2 font-weight-light text-light" href="#">
+        <Link
+          className="nav-link mx-2 font-weight-light text-light"
+          to="/theaters"
+        >
           All Theaters
-        </a>
+        </Link>
       </li>
     </ul>
   );
