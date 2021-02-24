@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Theater from "./Theater";
-const { REACT_APP_API_URL: API_URL } = process.env;
+import ErrorAlert from "../shared/ErrorAlert";
+import { listTheaters } from "../utils/api";
 
 function TheaterList() {
   const [theaters, setTheaters] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function loadTheaters() {
-      const url = `${API_URL}/theaters?included=movies`;
-      const response = await fetch(url);
-      return response.json();
-    }
-
-    loadTheaters().then(({ data }) => setTheaters(data));
+    setError(null);
+    const abortController = new AbortController();
+    listTheaters(abortController.signal).then(setTheaters).catch(setError);
+    return () => abortController.abort();
   }, []);
 
   const list = theaters.map((theater) => (
     <Theater key={theater.theater_id} theater={theater} />
   ));
+
   return (
     <main className="container">
+      <ErrorAlert error={error} />
       <h2 className="font-poppins">All Theaters</h2>
       <hr />
       <section className="row">{list}</section>

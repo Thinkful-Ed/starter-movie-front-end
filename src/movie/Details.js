@@ -1,5 +1,5 @@
 import React from "react";
-import averageReviewRating from "../utils/averageReviewRating";
+import AverageRating from "./AverageRating";
 
 function Details({ movie }) {
   return (
@@ -12,11 +12,7 @@ function Details({ movie }) {
       <p>
         <strong>Rating:</strong> {movie.rating}
       </p>
-      {movie.reviews && movie.reviews.length && (
-        <p>
-          <strong>Average Review Rating:</strong> {averageReviewRating(movie)}
-        </p>
-      )}
+      <AverageRating reviews={movie.reviews} />
     </section>
   );
 }

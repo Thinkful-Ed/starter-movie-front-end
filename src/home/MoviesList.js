@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-const { REACT_APP_API_URL: API_URL } = process.env;
+import ErrorAlert from "../shared/ErrorAlert";
+import { listMovies } from "../utils/api";
 
 function MoviesList() {
   const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function loadMovies() {
-      const url = `${API_URL}/movies?is_showing=true`;
-      const response = await fetch(url);
-      return response.json();
-    }
+    setError(null);
+    const abortController = new AbortController();
+    listMovies(abortController.signal).then(setMovies).catch(setError);
 
-    loadMovies().then(({ data }) => setMovies(data));
+    return () => abortController.abort();
   }, []);
 
   const list = movies.map((movie) => (
@@ -34,6 +34,7 @@ function MoviesList() {
 
   return (
     <main className="container">
+      <ErrorAlert error={error} />
       <h2 className="font-poppins">Now Showing</h2>
       <hr />
       <section className="row">{list}</section>
