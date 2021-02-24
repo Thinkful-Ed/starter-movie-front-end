@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Theater({ theater }) {
   return (
@@ -16,12 +17,14 @@ function Theater({ theater }) {
         <section className="col">
           <div className="row">
             {theater.movies.map((movie) => (
-              <div className="col-2">
-                <img
-                  alt={`${movie.title} Poster`}
-                  src={movie.image_url}
-                  className="w-100"
-                />
+              <div key={movie.movie_id} className="col-2">
+                <Link to={`/movies/${movie.movie_id}`}>
+                  <img
+                    alt={`${movie.title} Poster`}
+                    src={movie.image_url}
+                    className="w-100"
+                  />
+                </Link>
               </div>
             ))}
           </div>

@@ -1,32 +1,31 @@
 import React from "react";
 import Review from "./Review";
 
-function ReviewList({ reviews, deleteReview, updateReviewScore }) {
-  reviews = reviews.sort((reviewA, reviewB) => {
-    const nameA = reviewA.critic.preferred_name;
-    const nameB = reviewB.critic.preferred_name;
-    if (nameA[0] > nameB[0]) {
-      return 1;
-    } else if (nameA[0] < nameB[0]) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
-
-  return (
-    <section className="mt-4">
-      <h3>Reviews</h3>
-      {reviews.map((review) => (
+function ReviewList({ reviews = [], deleteReview, setReviewScore }) {
+  if (reviews.length) {
+    const list = reviews
+      .sort((leftReview, rightReview) => {
+        return leftReview.critic.preferred_name.localeCompare(
+          rightReview.critic.preferred_name
+        );
+      })
+      .map((review) => (
         <Review
           key={review.review_id}
           review={review}
           deleteReview={deleteReview}
-          updateReviewScore={updateReviewScore}
+          setReviewScore={setReviewScore}
         />
-      ))}
-    </section>
-  );
+      ));
+
+    return (
+      <section className="mt-4">
+        <h3>Reviews</h3>
+        {list}
+      </section>
+    );
+  }
+  return null;
 }
 
 export default ReviewList;

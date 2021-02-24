@@ -1,23 +1,21 @@
 import React from "react";
 import { markdown } from "markdown";
 
-function Review({ review, deleteReview, updateReviewScore }) {
-  const handleIncreaseClick = (review) => {
+const scoreButtonStyle = {
+  padding: "0 0px 5px 5px",
+};
+
+function Review({ review, deleteReview, setReviewScore }) {
+  const handleIncreaseClick = () => {
     const score = review.score + 1;
     if (score > 5) return;
-    updateReviewScore(review, score);
+    setReviewScore(review, score);
   };
 
-  const handleDecreaseClick = (review) => {
+  const handleDecreaseClick = () => {
     const score = review.score - 1;
     if (score < 1) return;
-    updateReviewScore(review, score);
-  };
-
-  const handleDeleteReview = (review) => deleteReview(review);
-
-  const scoreButtonStyle = {
-    padding: "0 0px 5px 5px",
+    setReviewScore(review, score);
   };
 
   const { critic } = review;
@@ -30,29 +28,26 @@ function Review({ review, deleteReview, updateReviewScore }) {
       </h4>
       <p
         dangerouslySetInnerHTML={{ __html: markdown.toHTML(review.content) }}
-      ></p>
+      />
       <p>
         <strong>Rating:</strong> {review.score}
         <button
           className="btn btn-link"
           style={scoreButtonStyle}
-          onClick={() => handleIncreaseClick(review)}
+          onClick={() => handleIncreaseClick()}
         >
           ↑
         </button>
         <button
           className="btn btn-link"
           style={scoreButtonStyle}
-          onClick={() => handleDecreaseClick(review)}
+          onClick={() => handleDecreaseClick()}
         >
           ↓
         </button>
       </p>
 
-      <button
-        className="btn btn-danger"
-        onClick={() => handleDeleteReview(review)}
-      >
+      <button className="btn btn-danger" onClick={() => deleteReview(review)}>
         Destroy Review
       </button>
     </section>
